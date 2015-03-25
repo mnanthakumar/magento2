@@ -1,12 +1,13 @@
 FROM ubuntu:14.04
 MAINTAINER Nantha Kumar <kumar.devilers@gmail.com>
 
+
 RUN apt-get update 
 
 # install Apache2
 
 RUN apt-get install -y apache2
-RUN mkdir -p /var/lock/apache2 /var/run/apache2
+
 
 # install Mysql
 
@@ -16,7 +17,7 @@ RUN apt-get install -y mysql-server-5.6 libapache2-mod-auth-mysql php5-mysql
 
 RUN apt-get install -y php5 libapache2-mod-php5 php5-mcrypt
 
-# install Server
+# install ssh
 
 RUN apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
@@ -25,12 +26,6 @@ RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/ss
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
-
-# install Supervisor
-
-RUN apt-get install -y supervisor
-RUN mkdir /var/log/supervisor
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # install Extensions
 
@@ -41,4 +36,3 @@ ADD phpinfo.php /var/www/html/
 EXPOSE 22 80 3306
 
 CMD ["/usr/sbin/sshd", "-D"]
-CMD ["/usr/bin/supervisord"]
