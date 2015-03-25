@@ -1,7 +1,6 @@
 FROM ubuntu:14.04
 MAINTAINER Nantha Kumar <kumar.devilers@gmail.com>
 
-
 RUN apt-get update 
 
 # install Apache2
@@ -17,7 +16,7 @@ RUN apt-get install -y mysql-server-5.6 libapache2-mod-auth-mysql php5-mysql
 
 RUN apt-get install -y php5 libapache2-mod-php5 php5-mcrypt
 
-# install ssh
+# install Server
 
 RUN apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
@@ -27,7 +26,7 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
-# install Extensions
+# install Supervisor
 
 RUN apt-get install -y supervisor
 RUN mkdir /var/log/supervisor
