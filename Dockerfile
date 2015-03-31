@@ -9,7 +9,6 @@ RUN apt-get update
 
 RUN apt-get -y install supervisor
 RUN mkdir -p /var/log/supervisor
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # SSH
 
@@ -36,9 +35,18 @@ RUN echo "root:magento2" | chpasswd
 RUN apt-get clean
 RUN rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
+# START
+
+ADD start-apache.sh /start-apache.sh
+ADD start-mysql.sh /start-mysql.sh
+ADD start-ssh.sh /start-ssh.sh
+ADD start.sh /start.sh
+RUN chmod 755 /*.sh
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 EXPOSE 22 80 3306
 
-VOLUME ["/var/lib/mysql"]
+VOLUME  ["/etc/mysql", "/var/lib/mysql" ]
 
-CMD ["/usr/sbin/sshd", "-D"]
-CMD ["/usr/bin/supervisord"]
+CMD ["/start.sh"]
+
