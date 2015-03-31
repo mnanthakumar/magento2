@@ -6,7 +6,7 @@ MAINTAINER Nantha Kumar <kumar.devilers@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
-apt-get -y install apache2 mysql-server-5.6 libapache2-mod-auth-mysql php5-mysql php5 libapache2-mod-php5 php5-mcrypt openssh-server curl php5-curl php5-intl php5-gd php5-mysql mcrypt php5-mcrypt supervisor git && \
+apt-get -y install apache2 && \
 
 # Enable apache mods.
 RUN a2enmod php5
