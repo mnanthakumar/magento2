@@ -36,11 +36,6 @@ RUN echo "root:magento2" | chpasswd
 RUN apt-get clean
 RUN rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
-# PHP5
-
-RUN apt-get install -y php5 libapache2-mod-php5 php5-mcrypt
-RUN php5enmod mcrypt
-
 EXPOSE 22 80 3306
 
 VOLUME ["/var/lib/mysql"]
