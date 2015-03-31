@@ -7,22 +7,26 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
 apt-get -y install apache2 mysql-server-5.6 libapache2-mod-auth-mysql php5-mysql php5 libapache2-mod-php5 php5-mcrypt openssh-server curl php5-curl php5-intl php5-gd php5-mysql mcrypt php5-mcrypt supervisor git && \
-echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-ADD start-apache2.sh /start-apache2.sh
-ADD start-mysqld.sh /start-mysqld.sh
-ADD run.sh /run.sh
-RUN chmod 755 /*.sh
-ADD my.cnf /etc/mysql/conf.d/my.cnf
-ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
-ADD supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
+# Enable apache mods.
+RUN a2enmod php5
+RUN a2enmod rewrite
 
-RUN rm -rf /var/lib/mysql/*
+# Manually set up the apache environment variables
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+ENV APACHE_LOCK_DIR /var/lock/apache2
+ENV APACHE_PID_FILE /var/run/apache2.pid
 
-ENV PHP_UPLOAD_MAX_FILESIZE 10M
-ENV PHP_POST_MAX_SIZE 10M
+EXPOSE 80
 
-VOLUME  ["/etc/mysql", "/var/lib/mysql" ]
+# Update the default apache site with the config we created.
+ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
-EXPOSE 80 3306
-CMD ["/run.sh"]
+# By default, simply start apache.
+CMD bash -c '(mysqld &); /usr/sbin/apache2ctl -D FOREGROUND'
+
+#CMD [ "mysqladmin -u root password magento2"]
+
+EXPOSE 3306
