@@ -19,4 +19,4 @@ env LANG C
 
 EXPOSE 80
 
-CMD /usr/sbin/apache2ctl -D FOREGROUND
+CMD ["apache2", "-D", "FOREGROUND"]
