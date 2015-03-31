@@ -4,8 +4,7 @@ MAINTAINER Nantha Kumar <kumar.devilers@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update 
-RUN apt-get -y install supervisor apache2 mysql-server-5.6 php5 php5-mcrypt php5-mysql libapache2-mod-php5 php5-intl php5-gd libapache2-mod-auth-mysql curl php5-curl mcrypt phpmyadmin
-RUN php5enmod mcrypt
+RUN apt-get -y install supervisor apache2 php5 libapache2-mod-php5 php5-mcrypt mysql-server-5.6 libapache2-mod-auth-mysql php5-mysql phpmyadmin
 
 ADD apache2-start.sh /apache2-start.sh
 ADD mysql-start.sh /mysql-start.sh
