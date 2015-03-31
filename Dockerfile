@@ -5,21 +5,18 @@ MAINTAINER Nantha Kumar <kumar.devilers@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && \
-apt-get -y install apache2 && \
+RUN apt-get update 
+RUN apt-get -y install apache2 
 
-# Enable apache mods.
-RUN a2enmod php5
-RUN a2enmod rewrite
+env APACHE_RUN_USER www-data
+env APACHE_RUN_GROUP www-data
+env APACHE_PID_FILE /var/run/apache2.pid
+env APACHE_RUN_DIR /var/run/apache2
+env APACHE_LOCK_DIR /var/lock/apache2
+env APACHE_LOG_DIR /var/log/apache2
+env LANG C
 
-# Manually set up the apache environment variables
-ENV APACHE_RUN_USER www-data
-ENV APACHE_RUN_GROUP www-data
-ENV APACHE_LOG_DIR /var/log/apache2
-ENV APACHE_LOCK_DIR /var/lock/apache2
-ENV APACHE_PID_FILE /var/run/apache2.pid
 
 EXPOSE 80
 
-ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 CMD /usr/sbin/apache2ctl -D FOREGROUND
