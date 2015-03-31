@@ -5,17 +5,11 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
 
-# UPDATE
+# SUPERVISOR
 
 RUN apt-get -y install supervisor
 RUN mkdir -p /var/log/supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Apache2 
-
-RUN apt-get -y install apache2 
-RUN mkdir -p /var/lock/apache2 /var/run/apache2
-
 
 # SSH
 
@@ -27,7 +21,25 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
+# Apache2 
 
-EXPOSE 22 80
+RUN apt-get -y install apache2 
+RUN mkdir -p /var/lock/apache2 /var/run/apache2
+
+# MYSQL
+
+RUN apt-get install -y mysql-server-5.6 libapache2-mod-auth-mysql php5-mysql
+# setup mysql
+RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
+ADD set-mysql-password.sh /tmp/set-mysql-password.sh
+RUN /bin/sh /tmp/set-mysql-password.sh
+RUN echo "root:magento2" | chpasswd
+RUN apt-get clean
+RUN rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+
+EXPOSE 22 80 3306
+
+VOLUME ["/var/lib/mysql"]
+
 CMD ["/usr/sbin/sshd", "-D"]
 CMD ["/usr/bin/supervisord"]
