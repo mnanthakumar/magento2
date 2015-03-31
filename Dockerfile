@@ -20,4 +20,5 @@ env LANG C
 
 
 EXPOSE 80
+ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 CMD ["apache2", "-D", "FOREGROUND"]
