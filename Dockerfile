@@ -12,10 +12,10 @@ RUN a2enmod rewrite
 
 # MySQL
 RUN apt-get -y install  mysql-server-5.6 libapache2-mod-auth-mysql php5-mysql
-ADD configs/mysql/mysql-setup.sh /mysql-setup.sh
+ADD mysql/mysql-setup.sh /mysql-setup.sh
 RUN chmod +x /*.sh
-ADD configs/mysql/my.cnf /etc/mysql/conf.d/my.cnf
-ADD configs/mysql/supervisor.conf /etc/supervisor/conf.d/mysql.conf
+ADD mysql/my.cnf /etc/mysql/conf.d/my.cnf
+ADD mysql/supervisor.conf /etc/supervisor/conf.d/mysql.conf
 RUN /mysql-setup.sh
 
 env APACHE_RUN_USER www-data
