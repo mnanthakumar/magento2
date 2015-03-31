@@ -6,7 +6,9 @@ MAINTAINER Nantha Kumar <kumar.devilers@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update 
-RUN apt-get -y install apache2 
+RUN apt-get -y install apache2 php5 libapache2-mod-php5 php5-mcrypt
+RUN a2enmod php5
+RUN a2enmod rewrite 
 
 env APACHE_RUN_USER www-data
 env APACHE_RUN_GROUP www-data
@@ -18,5 +20,4 @@ env LANG C
 
 
 EXPOSE 80
-
 CMD ["apache2", "-D", "FOREGROUND"]
