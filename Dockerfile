@@ -29,13 +29,16 @@ RUN mkdir -p /var/lock/apache2 /var/run/apache2
 # MYSQL
 
 RUN apt-get install -y mysql-server-5.6 libapache2-mod-auth-mysql php5-mysql
-# setup mysql
 RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
 ADD set-mysql-password.sh /tmp/set-mysql-password.sh
 RUN /bin/sh /tmp/set-mysql-password.sh
 RUN echo "root:magento2" | chpasswd
 RUN apt-get clean
 RUN rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+
+# PHP5
+
+RUN apt-get install -y php5 libapache2-mod-php5 php5-mcrypt
 
 EXPOSE 22 80 3306
 
